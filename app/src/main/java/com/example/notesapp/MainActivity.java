@@ -98,3 +98,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 }
+
+
+
+
+   /* val db = Firebase.firestore;
+
+    val table = db.collection("user")
+    val query = table.whereEqualTo("isAdmin", true).get().addOnSuccessListener {documents ->
+        for (document in documents) {
+        Log.d(TAG, "onCreate: data "+document.get("name"))
+        }
+        }*/

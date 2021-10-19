@@ -1,17 +1,23 @@
 package com.example.notesapp;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
@@ -29,6 +35,9 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.List;
+import java.util.Random;
+
+import static android.graphics.Color.parseColor;
 
 public class NotesActivity extends AppCompatActivity {
     private static final String TAG = "Notes";
@@ -37,14 +46,13 @@ public class NotesActivity extends AppCompatActivity {
     private FirebaseUser firebaseUser;
     private FirebaseFirestore firebaseFirestore;
     FirestoreRecyclerAdapter<FirebaseModel,NotesViewHolder> notesAdapter;
-    //private NotesRecyclerAdapter notesRecyclerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityNotesBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FFBE0B")));
         firebaseAuth=FirebaseAuth.getInstance();
         firebaseUser=firebaseAuth.getCurrentUser();
         firebaseFirestore=FirebaseFirestore.getInstance();
@@ -69,6 +77,17 @@ public class NotesActivity extends AppCompatActivity {
                 Log.d(TAG, "onBindViewHolder: title= "+model.getTitle());
                 holder.titleTV.setText(model.getTitle());
                 holder.contentTV.setText(model.getContent());
+                holder.randomIV.setImageResource(setRandomImg());
+
+                String docId=notesAdapter.getSnapshots().getSnapshot(position).getId();
+
+                holder.notes.setOnClickListener(view -> {
+                    Intent toNoteDetail=new Intent(getApplicationContext(), NoteDetail.class);
+                    toNoteDetail.putExtra("title",model.getTitle());
+                    toNoteDetail.putExtra("content",model.getContent());
+                    toNoteDetail.putExtra("docId",docId);
+                    startActivity(toNoteDetail);
+                });
             }
 
             @NonNull
@@ -85,18 +104,37 @@ public class NotesActivity extends AppCompatActivity {
 
 
     }
-    public class NotesViewHolder extends RecyclerView.ViewHolder {
+    public class NotesViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
         TextView titleTV,contentTV;
+        ImageView randomIV;
+        CardView notes;
         public NotesViewHolder(@NonNull View itemView) {
             super(itemView);
             titleTV=itemView.findViewById(R.id.titleTV);
             contentTV=itemView.findViewById(R.id.contentTV);
+            randomIV=itemView.findViewById(R.id.randomIV);
+            notes=itemView.findViewById(R.id.item_notes);
+            notes.setOnCreateContextMenuListener(this);
+
+        }
+
+        @Override
+        public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
+            getMenuInflater().inflate(R.menu.notes_menu,contextMenu);
         }
     }
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.log_out,menu);
-        return true;
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId())
+        {
+            case R.id.edit:
+                Toast.makeText(this, "edit selected", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.delete:
+                Toast.makeText(this, "deleted notes", Toast.LENGTH_SHORT).show();
+                return true;
+        }
+        return super.onContextItemSelected(item);
     }
 
     @Override
@@ -106,6 +144,7 @@ public class NotesActivity extends AppCompatActivity {
             case R.id.logOut:
                 firebaseAuth.signOut();
                 startActivity(new Intent(getApplicationContext(),MainActivity.class));
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -123,5 +162,14 @@ public class NotesActivity extends AppCompatActivity {
         if (notesAdapter != null) {
             notesAdapter.stopListening();
         }
+    }
+
+
+
+    private int setRandomImg() {
+        Integer random[]={R.drawable.ic_green, R.drawable.ic_blue, R.drawable.ic_red, R.drawable.ic_pink,R.drawable.ic_orange};
+        Random randomNo=new Random();
+        int random1=randomNo.nextInt(5);
+        return random[random1];
     }
 }

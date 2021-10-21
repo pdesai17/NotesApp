@@ -59,7 +59,11 @@ public class NoteDetail extends AppCompatActivity {
         {
             case R.id.editNote:
                 Intent toEdit=new Intent(this,EditNotesActivity.class);
+                toEdit.putExtra("title",title);
+                toEdit.putExtra("content",content);
+                toEdit.putExtra("docId",docId);
                 startActivity(toEdit);
+                finish();
                 break;
             case R.id.deleteNote:
                 deleteNote();

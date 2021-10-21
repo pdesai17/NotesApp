@@ -5,96 +5,123 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    android:background="@color/cardview_dark_background"
+    android:background="@color/white"
     >
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/newUserTV"
+        android:id="@+id/signUpTV"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:text="Sign Up"
-        android:textSize="45dp"
-        android:textStyle="bold"
-        android:textColor="@color/purple"
-        android:layout_marginTop="45dp"
+        android:textColor="@color/black"
+        android:textSize="35sp"
+        android:fontFamily="@font/poppins_light"
         android:layout_marginLeft="20dp"
+        android:layout_marginTop="45dp"
         />
     <TextView
+        android:id="@+id/msgTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/newUserMsgTV"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/newUserTV"
+        app:layout_constraintStart_toStartOf="@+id/signUpTV"
+        app:layout_constraintTop_toBottomOf="@+id/signUpTV"
         android:text="Nice to see you here"
-        android:textColor="@color/purple"
-        android:textSize="26dp"
+        android:textColor="@color/yellow"
+        android:textSize="24sp"
+        android:fontFamily="@font/poppins_light"
+        android:textStyle="bold"
         android:layout_marginTop="15dp"
-        android:layout_marginLeft="20dp"
         />
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="350dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/signEmailTIL"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/newUserMsgTV"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="50dp"
-        android:textColorHint="@color/white"
-        >
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/signEmailTIE"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:hint="Enter your email"
-            android:textColor="@color/white"
-            android:background="@color/cardview_dark_background"
-            />
-    </com.google.android.material.textfield.TextInputLayout>
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="350dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/signPassTIL"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signEmailTIL"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="50dp"
-        android:textColorHint="@color/white"
-        app:passwordToggleEnabled="true"
-        app:passwordToggleTint="@color/white"
-        >
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/signPassTIE"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:hint="Enter your Password"
-            android:textColor="@color/white"
-            android:background="@color/cardview_dark_background"
-            />
-    </com.google.android.material.textfield.TextInputLayout>
     <androidx.cardview.widget.CardView
-        android:layout_width="250dp"
-        android:layout_height="60dp"
-        android:id="@+id/signUpBtnCV"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signPassTIL"
+        android:id="@+id/emailCV"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@+id/signUpTV"
+        app:layout_constraintTop_toBottomOf="@+id/msgTV"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="2dp"
         android:layout_marginTop="50dp"
-        app:cardCornerRadius="18dp"
         >
-        <FrameLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/teal_200"
+            android:id="@+id/signEmailTIL"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/newUserMsgTV"
+            android:background="@color/white"
+            android:textColorHint="@color/grey"
             >
-            <TextView
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/signEmailTIE"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:hint="Enter your email"
+                android:textSize="16sp"
+                android:padding="10dp"
+                android:textColor="@color/black"
+                android:background="@color/white"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+    </androidx.cardview.widget.CardView>
+    <androidx.cardview.widget.CardView
+        android:id="@+id/passCV"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@+id/emailCV"
+        app:layout_constraintTop_toBottomOf="@+id/emailCV"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="2dp"
+        android:background="@color/white"
+        android:layout_marginTop="50dp">
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/passTIL"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/emailCV"
+            android:textColorHint="@color/grey"
+            app:passwordToggleEnabled="true"
+            app:passwordToggleTint="@color/yellow"
+            android:background="@color/white"
+            >
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/signPassTIE"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="Enter your Password"
+                android:padding="10dp"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:background="@color/white"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/signUpCV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/passCV"
+        app:cardCornerRadius="10dp"
+        android:layout_marginTop="90dp"
+        >
+
+        <FrameLayout
+            android:layout_width="340dp"
+            android:layout_height="50dp"
+            android:background="@color/yellow">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:text="Sign Up"
                 android:textColor="@color/white"
-                android:textSize="25dp"
-                android:gravity="center"
-                />
+                android:textSize="20sp"
+                android:fontFamily="@font/poppins_light"/>
         </FrameLayout>
     </androidx.cardview.widget.CardView>
 
@@ -102,12 +129,12 @@
         android:id="@+id/alreadyUserTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="96dp"
-        android:text="Already a User? Login"
-        android:textColor="@color/white"
-        android:textSize="25dp"
+        android:layout_marginTop="140dp"
+        android:fontFamily="@font/poppins_regular"
+        android:text="Already a User? Sign In"
+        android:textColor="@color/black"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signUpBtnCV" />
+        app:layout_constraintTop_toBottomOf="@+id/signUpCV" />
 </androidx.constraintlayout.widget.ConstraintLayout>

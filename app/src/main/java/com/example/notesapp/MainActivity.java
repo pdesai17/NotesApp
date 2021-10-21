@@ -5,7 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.BackgroundColorSpan;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -32,8 +39,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        SpannableString spannableStr = new SpannableString("New User? Sign Up");
+        ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(getResources().getColor(R.color.yellow));
+        spannableStr.setSpan(foregroundColorSpan, 10, 17, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        binding.signUpTV.setText(spannableStr);
+
+
         firebaseAuth = FirebaseAuth.getInstance();
-        binding.logBtnCV.setOnClickListener(new View.OnClickListener() {
+        binding.signUpCV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 binding.passTIL.setError(null);

@@ -6,6 +6,9 @@ import androidx.cardview.widget.CardView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -34,7 +37,11 @@ public class SignUp extends AppCompatActivity {
         firebaseAuth=FirebaseAuth.getInstance();
 
 
-        binding.signUpBtnCV.setOnClickListener(new View.OnClickListener() {
+        SpannableString spannableStr = new SpannableString("Already a User? Sign In");
+        ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(getResources().getColor(R.color.yellow));
+        spannableStr.setSpan(foregroundColorSpan, 16, 23, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        binding.alreadyUserTV.setText(spannableStr);
+        binding.signUpCV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String nEmail = binding.signEmailTIE.getText().toString();

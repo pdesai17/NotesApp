@@ -6,6 +6,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,8 +36,10 @@ public class CreateNotesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding= ActivityCreateNotesBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
         setSupportActionBar(binding.titleToolBar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back);
 
         firebaseAuth=FirebaseAuth.getInstance();
         firebaseUser=firebaseAuth.getCurrentUser();
@@ -65,6 +68,9 @@ public class CreateNotesActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(Void aVoid) {
                             Toast.makeText(CreateNotesActivity.this, "Notes Created Successfully", Toast.LENGTH_SHORT).show();
+                            Intent toNotesActivity=new Intent(getApplicationContext(),NotesActivity.class);
+                            startActivity(toNotesActivity);
+                            finish();
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
@@ -82,7 +88,7 @@ public class CreateNotesActivity extends AppCompatActivity {
         {
             onBackPressed();
         }
-        return true;
+        return false;
     }
 
 

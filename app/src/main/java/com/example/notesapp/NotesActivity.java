@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,10 +26,12 @@ import com.example.notesapp.databinding.ActivityNotesBinding;
 import com.example.notesapp.databinding.SingleNoteBinding;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -42,10 +45,13 @@ import static android.graphics.Color.parseColor;
 public class NotesActivity extends AppCompatActivity {
     private static final String TAG = "Notes";
     private ActivityNotesBinding binding;
+    private String title,content,docId;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private FirebaseFirestore firebaseFirestore;
     FirestoreRecyclerAdapter<FirebaseModel,NotesViewHolder> notesAdapter;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,19 +80,47 @@ public class NotesActivity extends AppCompatActivity {
         notesAdapter=new FirestoreRecyclerAdapter<FirebaseModel, NotesViewHolder>(allNotes) {
             @Override
             protected void onBindViewHolder(@NonNull NotesViewHolder holder, int position, @NonNull FirebaseModel model) {
-                Log.d(TAG, "onBindViewHolder: title= "+model.getTitle());
+                Log.d(TAG, "onBindViewHolder: title= " + model.getTitle());
+
                 holder.titleTV.setText(model.getTitle());
                 holder.contentTV.setText(model.getContent());
-                holder.randomIV.setImageResource(setRandomImg());
-
-                String docId=notesAdapter.getSnapshots().getSnapshot(position).getId();
+                holder.upperBorderIV.setImageResource(setRandomImg());
 
                 holder.notes.setOnClickListener(view -> {
-                    Intent toNoteDetail=new Intent(getApplicationContext(), NoteDetail.class);
-                    toNoteDetail.putExtra("title",model.getTitle());
-                    toNoteDetail.putExtra("content",model.getContent());
-                    toNoteDetail.putExtra("docId",docId);
+                    Intent toNoteDetail = new Intent(getApplicationContext(), NoteDetail.class);
+                    title = model.getTitle();
+                    content = model.getContent();
+                    docId = notesAdapter.getSnapshots().getSnapshot(position).getId();
+                    toNoteDetail.putExtra("title", title);
+                    toNoteDetail.putExtra("content", content);
+                    toNoteDetail.putExtra("docId", docId);
                     startActivity(toNoteDetail);
+                });
+                holder.optionIV.setOnClickListener(view -> {
+                    Log.d(TAG, "onBindViewHolder: clicked");
+                    PopupMenu popupMenu=new PopupMenu(view.getContext(),view);
+                    popupMenu.getMenu().add("Edit").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem menuItem) {
+                            docId = notesAdapter.getSnapshots().getSnapshot(position).getId();
+
+                            Intent toEditNotes=new Intent(getApplicationContext(),EditNotesActivity.class);
+                            toEditNotes.putExtra("title",model.getTitle());
+                            toEditNotes.putExtra("content",model.getContent());
+                            toEditNotes.putExtra("docId",docId);
+                            startActivity(toEditNotes);
+                            return false;
+                        }
+                    });
+                    popupMenu.getMenu().add("Delete").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem menuItem) {
+                            docId=notesAdapter.getSnapshots().getSnapshot(position).getId();
+                            deleteNote(docId);
+                            return false;
+                        }
+                    });
+                    popupMenu.show();
                 });
             }
 
@@ -104,37 +138,41 @@ public class NotesActivity extends AppCompatActivity {
 
 
     }
-    public class NotesViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
+    public class NotesViewHolder extends RecyclerView.ViewHolder {
         TextView titleTV,contentTV;
-        ImageView randomIV;
+        ImageView optionIV,upperBorderIV;
         CardView notes;
         public NotesViewHolder(@NonNull View itemView) {
             super(itemView);
             titleTV=itemView.findViewById(R.id.titleTV);
             contentTV=itemView.findViewById(R.id.contentTV);
-            randomIV=itemView.findViewById(R.id.randomIV);
+            optionIV=itemView.findViewById(R.id.optionMenuIV);
             notes=itemView.findViewById(R.id.item_notes);
-            notes.setOnCreateContextMenuListener(this);
-
+            upperBorderIV=itemView.findViewById(R.id.upperBorderIV);
         }
 
-        @Override
-        public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
-            getMenuInflater().inflate(R.menu.notes_menu,contextMenu);
-        }
     }
-    @Override
-    public boolean onContextItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId())
-        {
-            case R.id.edit:
-                Toast.makeText(this, "edit selected", Toast.LENGTH_SHORT).show();
-                return true;
-            case R.id.delete:
-                Toast.makeText(this, "deleted notes", Toast.LENGTH_SHORT).show();
-                return true;
-        }
-        return super.onContextItemSelected(item);
+
+
+    private void deleteNote(String docId) {
+        Log.d(TAG, "deleteNote: docId= "+docId);
+        DocumentReference documentReference=firebaseFirestore
+                .collection("Notes")
+                .document(firebaseUser.getUid())
+                .collection("MyNotes")
+                .document(String.valueOf(docId));
+        documentReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Toast.makeText(getApplicationContext(), "Successfully deleted", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getApplicationContext(), "Failed to delete", Toast.LENGTH_SHORT).show();
+
+            }
+        });
     }
 
     @Override

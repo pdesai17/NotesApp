@@ -27,10 +27,10 @@ public class ForgotPass extends AppCompatActivity {
         binding=ActivityForgotPassBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         firebaseAuth=FirebaseAuth.getInstance();
-        binding.newPassCV.setOnClickListener(new View.OnClickListener() {
+        binding.recoverCV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String fEmail=binding.fEmailTIE.getText().toString();
+                String fEmail=binding.emailTIE.getText().toString();
                 if(fEmail.isEmpty())
                 {
                     Toast.makeText(ForgotPass.this, "Enter your email", Toast.LENGTH_SHORT).show();

@@ -17,7 +17,7 @@
             android:layout_height="match_parent"
             android:hint="my custom title"
             android:textColor="@color/black"
-            android:textColorHint="@color/black"
+            android:textColorHint="@color/grey"
             android:id="@+id/createTitleET"
             />
       </androidx.appcompat.widget.Toolbar>
@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:hint="Enter content here"
             android:textColor="@color/black"
-            android:textColorHint="@color/black"
+            android:textColorHint="@color/grey"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/titleToolBar"
